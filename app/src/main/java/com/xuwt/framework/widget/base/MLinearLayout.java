@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.xuwt.baidu.framework.R;
+import com.xuwt.framework.R;
 import com.xuwt.framework.data.IDataContext;
 import com.xuwt.framework.fragment.IFragment;
 import com.xuwt.framework.manager.ThemeHelper;

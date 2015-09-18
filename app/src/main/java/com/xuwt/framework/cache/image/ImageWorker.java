@@ -26,7 +26,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.xuwt.baidu.framework.BuildConfig;
+import com.xuwt.framework.BuildConfig;
 import com.xuwt.framework.graphics.MBitmapDrawable;
 import com.xuwt.framework.graphics.MRecycleBitmapDrawable;
 import com.xuwt.framework.utils.OSUtils;

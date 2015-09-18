@@ -26,7 +26,7 @@ import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.xuwt.baidu.framework.BuildConfig;
+import com.xuwt.framework.BuildConfig;
 import com.xuwt.framework.cache.DiskLruCache;
 import com.xuwt.framework.graphics.MBitmapDrawable;
 import com.xuwt.framework.utils.FileUtils;

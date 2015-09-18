@@ -5,7 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.xuwt.baidu.framework.BuildConfig;
+import com.xuwt.framework.BuildConfig;
+
 
 public class MRecycleBitmapDrawable extends MBitmapDrawable {
 

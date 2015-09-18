@@ -19,7 +19,7 @@ package com.xuwt.framework.cache;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.xuwt.baidu.framework.BuildConfig;
+import com.xuwt.framework.BuildConfig;
 import com.xuwt.framework.cache.image.IDiskLruCache;
 import com.xuwt.framework.cache.image.ImageCache;
 import com.xuwt.framework.cache.image.ImageResizer;

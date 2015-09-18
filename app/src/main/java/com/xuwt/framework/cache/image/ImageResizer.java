@@ -24,7 +24,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 
-import com.xuwt.baidu.framework.BuildConfig;
+import com.xuwt.framework.BuildConfig;
 import com.xuwt.framework.manager.WindowManager;
 import com.xuwt.framework.utils.OSUtils;
 

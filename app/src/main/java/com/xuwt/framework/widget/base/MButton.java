@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
-import com.xuwt.baidu.framework.R;
+import com.xuwt.framework.R;
 import com.xuwt.framework.data.IDataContext;
 import com.xuwt.framework.fragment.IFragment;
 import com.xuwt.framework.manager.ThemeHelper;

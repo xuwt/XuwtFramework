@@ -23,8 +23,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.xuwt.baidu.framework.BuildConfig;
 import com.xuwt.framework.BaseApplication;
+import com.xuwt.framework.BuildConfig;
 import com.xuwt.framework.cache.image.ImageCache.ImageCacheParams;
 import com.xuwt.framework.manager.WindowManager;
 import com.xuwt.framework.net.engine.IEngineTask;
