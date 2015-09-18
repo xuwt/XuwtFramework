@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Below is system attribute -->
+
+    <declare-styleable name="DataContext">
+        <attr name="binding_background" format="string" />
+        <attr name="binding_forground" format="string" />
+        <attr name="binding_text" format="string" />
+        <attr name="binding_imgsrc" format="string" />
+        <attr name="binding_ischecked" format="string" />
+        <attr name="binding_date" format="string" />
+        <attr name="binding_value" format="string" />
+        <attr name="binding_perval" format="string" />
+        <attr name="binding_maxval" format="string" />
+        <attr name="binding_visibility" format="string" />
+        <attr name="binding_onclick" format="string" />
+        <attr name="binding_onchanged" format="string" />
+    </declare-styleable>
+
+</resources>

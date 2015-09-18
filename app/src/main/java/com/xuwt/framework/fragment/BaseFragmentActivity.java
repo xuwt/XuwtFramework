@@ -1,9 +1,9 @@
-package com.xuwt.framework.activity;
+package com.xuwt.framework.fragment;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -15,28 +15,26 @@ import com.xuwt.framework.net.ITask;
 import com.xuwt.framework.net.ITaskContext;
 import com.xuwt.framework.utils.OSUtils;
 import com.xuwt.framework.widget.MToast;
-import com.xuwt.framework.widget.base.IView;
 
 import java.lang.reflect.Field;
 
 
-public abstract class BaseActivity extends Activity
-	implements IActivityContext, ITaskContext {
+public abstract class BaseFragmentActivity extends FragmentActivity implements IFragmentContext, ITaskContext {
 
-	private ActivityProxy mProxy = new ActivityProxy(this);
+	protected FragmentActivityProxy mProxy = new FragmentActivityProxy(this);
 
 	@Override
-	public final void registView(IView view) {
+	public final void registFragment(IFragment fragment) {
 		if(mProxy != null) {
-			mProxy.registView(view);
-		}
+			mProxy.registFragment(fragment);
+    	}
 	}
 	
 	@Override
-	public final void unregistView(IView view) {
+	public final void unregistFragment(IFragment fragment) {
 		if(mProxy != null) {
-			mProxy.unregistView(view);
-		}
+			mProxy.unregistFragment(fragment);
+    	}
 	}
 	
 	@Override
@@ -57,7 +55,7 @@ public abstract class BaseActivity extends Activity
 	public final void onChangeTheme(String theme) {
 		if(mProxy != null) {
 			mProxy.onChangeTheme(theme);
-		}
+    	}
 	}
 	
 	/**
@@ -72,6 +70,7 @@ public abstract class BaseActivity extends Activity
 	/**
 	 * 开启硬件加速
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	protected void onHardwareAccelerated() {
 		if(enabledHardwareAccelerated()) {
 			if (OSUtils.hasHoneycomb()) {
@@ -81,7 +80,7 @@ public abstract class BaseActivity extends Activity
 			}
 		}
 	}
-
+	
 	/**
 	 * 取得传递的参数
 	 */
@@ -168,87 +167,126 @@ public abstract class BaseActivity extends Activity
 		onBindListener();
 		onApplyData();
 	}
-	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-    	if(mProxy != null) {
-			mProxy.onCreate(savedInstanceState);
-		}
-        super.onCreate(savedInstanceState);
-    }
     
     @Override
     protected void onStart() {
     	if(mProxy != null) {
 			mProxy.onStart();
-		}
+    	}
     	super.onStart();
-    }
-    
-    @Override
-    protected void onRestart() {
-    	if(mProxy != null) {
-			mProxy.onRestart();
-		}
-    	super.onRestart();
-    }
-    
-    @Override
-    protected void onNewIntent(Intent intent) {
-    	if(mProxy != null) {
-			mProxy.onNewIntent(intent);
-		}
-    	super.onNewIntent(intent);
-    }
-    
-    @Override
-    protected void onResume() {
-    	if(mProxy != null) {
-			mProxy.onResume();
-		}
-    	super.onResume();
     }
     
     @Override
     protected void onPause() {
     	if(mProxy != null) {
 			mProxy.onPause();
-		}
+    	}
     	super.onPause();
-    }
-    
-    @Override
-    protected void onStop() {
-    	if(mProxy != null) {
-			mProxy.onStop();
-		}
-    	super.onStop();
     }
     
     @Override
 	protected void onDestroy() {
     	if(mProxy != null) {
 			mProxy.onDestroy();
-		}
+    	}
     	mProxy = null;
 		super.onDestroy();
 	}
-    
+
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-    	if(mProxy != null) {
-			mProxy.onSaveInstanceState(outState);
-		}
-    	super.onSaveInstanceState(outState);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
     }
-    
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    	if(mProxy != null) {
-			mProxy.onRestoreInstanceState(savedInstanceState);
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(onKeyDownChild(keyCode, event))
+			return true;
+		return onKeyDownParent(keyCode, event);
+	}
+	
+	protected boolean onKeyDownChild(int keyCode, KeyEvent event) {
+		Fragment fragment = getCurrentFragment();
+		if(fragment != null && fragment instanceof BaseFragment) {
+			return ((BaseFragment)fragment).onKeyDown(keyCode, event);
 		}
-    	super.onRestoreInstanceState(savedInstanceState);
-    }
+		return false;
+	}
+	
+	protected boolean onKeyDownParent(int keyCode, KeyEvent event) {
+		if(ignoreBackKeyEvent()) {
+			if (keyCode == KeyEvent.KEYCODE_BACK) {
+				return false;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if(onKeyUpChild(keyCode, event))
+			return true;
+		return onKeyUpParent(keyCode, event);
+	}
+	
+	protected boolean onKeyUpChild(int keyCode, KeyEvent event) {
+		Fragment fragment = getCurrentFragment();
+		if(fragment != null && fragment instanceof BaseFragment) {
+			return ((BaseFragment)fragment).onKeyUp(keyCode, event);
+		}
+		return false;
+	}
+	
+	protected boolean onKeyUpParent(int keyCode, KeyEvent event) {
+		return super.onKeyUp(keyCode, event);
+	}
+	
+	protected boolean ignoreBackKeyEvent() {
+		return false;
+	}
+	
+	public Fragment getCurrentFragment() {
+		FragmentManager fm = getSupportFragmentManager();
+		if(fm.getFragments() != null && fm.getFragments().size() > 0) {
+			int index = fm.getFragments().size() - 1;
+			Fragment fragment = null;
+			while(index >= 0) {
+				fragment = fm.getFragments().get(index);
+				if(fragment != null)
+					break;
+				index--;
+			}
+			return fragment;
+		}
+		return null;
+	}
+	
+	public boolean popBackStack() {
+		FragmentManager fm = getSupportFragmentManager();
+		if(fm.getBackStackEntryCount() > 0) {
+			fm.popBackStack();
+			return true;
+		}
+		return false;
+	}
+	
+    public void popAllBackStack() {
+		FragmentManager fm = getSupportFragmentManager();
+		fm.popAllBackStack();
+	}
+	
+	public void performBackKeyClicked() {
+		new Thread() {
+			public void run() {
+				try {
+					Instrumentation inst = new Instrumentation();
+					inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
     
     protected void showToastMessage(String text) {
     	showToastMessage(text, Toast.LENGTH_SHORT);
@@ -312,18 +350,5 @@ public abstract class BaseActivity extends Activity
     	}
     	data.setAction(action);
     	startActivityForResult(data, requestCode);
-    }
-    
-    protected void performBackKeyClicked() {
-    	new Thread() {
-			public void run() {
-				try {
-					Instrumentation inst = new Instrumentation();
-					inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
     }
 }
